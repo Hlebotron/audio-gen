@@ -138,7 +138,6 @@ int play_notes(Note* notes, size_t len)
     float duration = max - min;
     float val[BUF_SIZE];
     float current_time;
-    float (*current_fn) (float, int);
     for(int i = 0; i < SAMPLE_RATE * duration; i++)
     {
 	current_time = i / SAMPLE_RATE;
@@ -148,8 +147,7 @@ int play_notes(Note* notes, size_t len)
 	    current_note = notes[j];
 	    if(!(current_note.begin > current_time || current_note.end < current_time))
 	    {
-		current_fn = current_note.fn;
-		current_fn(current_note.freq, i);
+		val[i % BUF_SIZE] += current_note.fn(current_note.freq, i);
 		// switch(current_note.type)
 		// {
 		// case TYPE_SQUARE:
